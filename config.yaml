@@ -1,0 +1,28 @@
+http_options: 
+  host: 0.0.0.0
+  port: 8080
+applications:
+  - name: API
+    import_path: app:app_builder
+    deployments:
+    - name: API
+      num_replicas: 1
+      ray_actor_options:
+        num_cpus: 1
+    args:
+      llms:
+        completions:
+          - name: "vicuna-13b"
+            class: "vicuna"
+            params:
+              load_in_8bit: True
+              device_map: "cuda:0"
+          - name: "vicuna-7b"
+            class: "vicuna"
+            params:
+              torch_dtype: "auto"
+        embedding:
+          - name: "instructor-large"
+            class: "sentence-transformers"
+          - name: "all-MiniLM-L6-v2"
+            class: "sentence-transformers"
